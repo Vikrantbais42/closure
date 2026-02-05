@@ -17,20 +17,20 @@ export default function Home() {
   return (
     <main className="flex min-h-screen w-full items-center justify-center bg-background p-4 sm:p-6 md:p-8">
       <Card className="w-full max-w-5xl overflow-hidden rounded-2xl shadow-2xl border-2 border-primary/10">
-        <CardHeader className="bg-card p-8">
-          <div className="flex items-center justify-between">
+        <CardHeader className="bg-card p-4 sm:p-8">
+          <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-4">
             {logo && (
               <Image
                 src={logo.imageUrl}
                 alt={logo.description}
-                width={100}
-                height={100}
+                width={120}
+                height={120}
                 data-ai-hint={logo.imageHint}
                 className="rounded-full border-4 border-primary/20"
               />
             )}
             <div className="text-center">
-              <CardTitle className="text-3xl font-bold tracking-tight text-primary font-headline">
+              <CardTitle className="text-2xl sm:text-3xl font-bold tracking-tight text-primary font-headline">
                 Project Closure Notice
               </CardTitle>
               <CardDescription className="pt-2 text-md text-muted-foreground">
@@ -41,15 +41,15 @@ export default function Home() {
               <Image
                 src={clientPhoto.imageUrl}
                 alt={clientPhoto.description}
-                width={100}
-                height={100}
+                width={120}
+                height={120}
                 data-ai-hint={clientPhoto.imageHint}
                 className="rounded-full border-4 border-primary/20"
               />
             )}
           </div>
         </CardHeader>
-        <CardContent className="p-8">
+        <CardContent className="p-4 sm:p-8">
           <div className="space-y-6 text-center text-foreground">
             <p className="text-lg leading-relaxed">
               Mr. Manoj Kumar, owner of Saat Phere project, has defaulted on payment of{' '}
