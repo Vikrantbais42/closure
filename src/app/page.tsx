@@ -8,28 +8,46 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function Home() {
+  const logo = PlaceHolderImages.find((p) => p.id === 'logo');
+  const clientPhoto = PlaceHolderImages.find((p) => p.id === 'client-photo');
+
   return (
     <main className="flex min-h-screen w-full items-center justify-center bg-background p-4 sm:p-6 md:p-8">
-      <Card className="w-full max-w-4xl overflow-hidden rounded-2xl shadow-2xl border-2 border-primary/10">
-        <CardHeader className="bg-card p-8 text-center">
-          <div className="mx-auto mb-6 flex items-center justify-center">
-            <Image
-              src="https://picsum.photos/seed/logo/200/60"
-              alt="Company Logo"
-              width={200}
-              height={60}
-              data-ai-hint="company logo"
-              className="rounded-lg"
-            />
+      <Card className="w-full max-w-5xl overflow-hidden rounded-2xl shadow-2xl border-2 border-primary/10">
+        <CardHeader className="bg-card p-8">
+          <div className="flex items-center justify-between">
+            {logo && (
+              <Image
+                src={logo.imageUrl}
+                alt={logo.description}
+                width={100}
+                height={100}
+                data-ai-hint={logo.imageHint}
+                className="rounded-full border-4 border-primary/20"
+              />
+            )}
+            <div className="text-center">
+              <CardTitle className="text-3xl font-bold tracking-tight text-primary font-headline">
+                Project Closure Notice
+              </CardTitle>
+              <CardDescription className="pt-2 text-md text-muted-foreground">
+                Important announcement regarding the "Saat Phere" project.
+              </CardDescription>
+            </div>
+            {clientPhoto && (
+              <Image
+                src={clientPhoto.imageUrl}
+                alt={clientPhoto.description}
+                width={100}
+                height={100}
+                data-ai-hint={clientPhoto.imageHint}
+                className="rounded-full border-4 border-primary/20"
+              />
+            )}
           </div>
-          <CardTitle className="text-3xl font-bold tracking-tight text-primary font-headline">
-            Project Closure Notice
-          </CardTitle>
-          <CardDescription className="pt-2 text-md text-muted-foreground">
-            Important announcement regarding the "Saat Phere" project.
-          </CardDescription>
         </CardHeader>
         <CardContent className="p-8">
           <div className="space-y-6 text-center text-foreground">
@@ -48,16 +66,6 @@ export default function Home() {
             <h3 className="text-lg font-semibold text-accent">
               Client Information
             </h3>
-            <div className="mx-auto mb-4 flex justify-center">
-              <Image
-                src="https://picsum.photos/seed/client/150/150"
-                alt="Client Photo"
-                width={150}
-                height={150}
-                data-ai-hint="person portrait"
-                className="rounded-full border-4 border-primary/20"
-              />
-            </div>
             <div className="text-muted-foreground">
               <p>
                 <span className="font-semibold text-foreground/80">Client Name:</span> Manoj Kumar
