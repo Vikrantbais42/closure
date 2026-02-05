@@ -64,17 +64,6 @@ export default function Home() {
             <Separator />
 
             <div className="space-y-4 text-center">
-              <p className="text-lg leading-relaxed font-['Noto_Sans']">
-                श्री मनोज कुमार, सात फेरे प्रोजेक्ट के मालिक, ने सहमत काम को पूरा करने के बावजूद <span className="font-bold text-primary">₹1,08,000/-</span> के भुगतान में डिफॉल्ट किया है। उन्होंने कॉल और संदेशों का जवाब देना बंद कर दिया है।
-              </p>
-              <p className="text-lg font-semibold text-primary font-['Noto_Sans']">
-                इस वजह से, सात फेरे प्रोजेक्ट बंद हो गया है और फिर कभी ऑनलाइन नहीं आएगा।
-              </p>
-            </div>
-
-            <Separator />
-
-            <div className="space-y-4 text-center">
               <p className="text-lg leading-relaxed">
                 Mr. Manoj Kumar, owner of Saat Phere project, ne agreed kaam fully complete hone ke baad bhi <span className="font-bold text-primary">₹1,08,000/-</span> ka payment nhi kiya hai. or na hi Calls aur messages ka koi response diya ja raha hai
               </p>
