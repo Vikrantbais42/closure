@@ -12,7 +12,7 @@ import { Separator } from '@/components/ui/separator';
 export default function Home() {
   return (
     <main className="flex min-h-screen w-full items-center justify-center bg-background p-4 sm:p-6 md:p-8">
-      <Card className="w-full max-w-2xl overflow-hidden rounded-2xl shadow-2xl border-2 border-primary/10">
+      <Card className="w-full max-w-3xl overflow-hidden rounded-2xl shadow-2xl border-2 border-primary/10">
         <CardHeader className="bg-card p-8 text-center">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
             <Lock className="h-8 w-8 text-primary" />
@@ -27,8 +27,8 @@ export default function Home() {
         <CardContent className="p-8">
           <div className="space-y-6 text-center text-foreground">
             <p className="text-lg leading-relaxed">
-              Manoj Kumar, the Owner of this project is not paying the remaining amount of{' '}
-              <span className="font-bold text-destructive">₹108,000</span>.
+              Mr. Manoj Kumar, owner of Saat Phere project, has defaulted on payment of{' '}
+              <span className="font-bold text-destructive">₹1,08,000/-</span> despite full completion of the agreed work. He has stopped responding to calls and messages.
             </p>
             <p className="text-lg font-semibold text-primary">
               Due to this, the Saat Phere project is closed and will never come online again.
