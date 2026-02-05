@@ -12,7 +12,7 @@ import { Separator } from '@/components/ui/separator';
 export default function Home() {
   return (
     <main className="flex min-h-screen w-full items-center justify-center bg-background p-4 sm:p-6 md:p-8">
-      <Card className="w-full max-w-lg overflow-hidden rounded-2xl shadow-2xl border-2 border-primary/10">
+      <Card className="w-full max-w-2xl overflow-hidden rounded-2xl shadow-2xl border-2 border-primary/10">
         <CardHeader className="bg-card p-8 text-center">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
             <Lock className="h-8 w-8 text-primary" />
