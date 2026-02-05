@@ -50,14 +50,38 @@ export default function Home() {
           </div>
         </CardHeader>
         <CardContent className="p-4 sm:p-8">
-          <div className="space-y-6 text-center text-foreground">
-            <p className="text-lg leading-relaxed">
-              Mr. Manoj Kumar, owner of Saat Phere project, has defaulted on payment of{' '}
-              <span className="font-bold text-primary">₹1,08,000/-</span> despite full completion of the agreed work. He has stopped responding to calls and messages.
-            </p>
-            <p className="text-lg font-semibold text-primary">
-              Due to this, the Saat Phere project is closed and will never come online again.
-            </p>
+          <div className="space-y-6 text-foreground">
+            <div className="space-y-4 text-center">
+              <p className="text-lg leading-relaxed">
+                Mr. Manoj Kumar, owner of Saat Phere project, has defaulted on payment of{' '}
+                <span className="font-bold text-primary">₹1,08,000/-</span> despite full completion of the agreed work. He has stopped responding to calls and messages.
+              </p>
+              <p className="text-lg font-semibold text-primary">
+                Due to this, the Saat Phere project is closed and will never come online again.
+              </p>
+            </div>
+
+            <Separator />
+
+            <div className="space-y-4 text-center">
+              <p className="text-lg leading-relaxed font-['Noto_Sans']">
+                श्री मनोज कुमार, सात फेरे प्रोजेक्ट के मालिक, ने सहमत काम को पूरा करने के बावजूद <span className="font-bold text-primary">₹1,08,000/-</span> के भुगतान में डिफॉल्ट किया है। उन्होंने कॉल और संदेशों का जवाब देना बंद कर दिया है।
+              </p>
+              <p className="text-lg font-semibold text-primary font-['Noto_Sans']">
+                इस वजह से, सात फेरे प्रोजेक्ट बंद हो गया है और फिर कभी ऑनलाइन नहीं आएगा।
+              </p>
+            </div>
+
+            <Separator />
+
+            <div className="space-y-4 text-center">
+              <p className="text-lg leading-relaxed">
+                Mr. Manoj Kumar, Saat Phere project ke malik, ne poora kaam hone ke bawajood <span className="font-bold text-primary">₹1,08,000/-</span> ka payment default kiya hai. Unhone calls aur messages ka jawab dena band kar diya hai.
+              </p>
+              <p className="text-lg font-semibold text-primary">
+                Is wajah se, Saat Phere project band ho gaya hai aur kabhi bhi online nahi aayega.
+              </p>
+            </div>
           </div>
 
           <Separator className="my-8" />
