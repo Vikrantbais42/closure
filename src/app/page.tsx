@@ -27,7 +27,7 @@ export default function Home() {
         <CardContent className="p-8">
           <div className="space-y-6 text-center text-foreground">
             <p className="text-lg leading-relaxed">
-              The Owner of this project is not paying the remaining amount of{' '}
+              Manoj Kumar, the Owner of this project is not paying the remaining amount of{' '}
               <span className="font-bold text-destructive">₹108,000</span>.
             </p>
             <p className="text-lg font-semibold text-primary">
