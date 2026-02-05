@@ -76,7 +76,7 @@ export default function Home() {
 
             <div className="space-y-4 text-center">
               <p className="text-lg leading-relaxed">
-                Mr. Manoj Kumar, Saat Phere project ke malik, ne poora kaam hone ke bawajood <span className="font-bold text-primary">₹1,08,000/-</span> ka payment default kiya hai. Unhone calls aur messages ka jawab dena band kar diya hai.
+                Mr. Manoj Kumar, owner of Saat Phere project, ne agreed kaam fully complete hone ke baad bhi <span className="font-bold text-primary">₹1,08,000/-</span> ka payment nhi kiya hai. or na hi Calls aur messages ka koi response diya ja raha hai
               </p>
               <p className="text-lg font-semibold text-primary">
                 Is wajah se, Saat Phere project band ho gaya hai aur kabhi bhi online nahi aayega.
