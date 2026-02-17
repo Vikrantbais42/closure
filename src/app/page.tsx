@@ -101,8 +101,8 @@ export default function Home() {
                 <Image
                   src={appStores.imageUrl}
                   alt={appStores.description}
-                  width={400}
-                  height={100}
+                  width={500}
+                  height={125}
                   data-ai-hint={appStores.imageHint}
                 />
               </div>
