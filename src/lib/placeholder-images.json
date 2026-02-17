@@ -11,6 +11,12 @@
       "description": "Photograph of the client",
       "imageUrl": "/images/manoj.jpeg",
       "imageHint": "person portrait"
+    },
+    {
+      "id": "app-stores",
+      "description": "App Store and Play Store logos",
+      "imageUrl": "/images/appStore.png",
+      "imageHint": "app store logos"
     }
   ]
 }

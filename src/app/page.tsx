@@ -13,6 +13,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 export default function Home() {
   const logo = PlaceHolderImages.find((p) => p.id === 'logo');
   const clientPhoto = PlaceHolderImages.find((p) => p.id === 'client-photo');
+  const appStores = PlaceHolderImages.find((p) => p.id === 'app-stores');
 
   return (
     <main className="flex min-h-screen w-full items-center justify-center bg-background p-4 sm:p-6 md:p-8">
@@ -87,6 +88,25 @@ export default function Home() {
                 <span className="font-semibold text-foreground/80">Address:</span> Vijay Nagar Chauraha, Etawah
               </p>
             </div>
+          </div>
+
+          <Separator className="my-8" />
+
+          <div className="space-y-4 text-center">
+            <h3 className="text-lg font-semibold text-accent">
+              App Removed from App Store and Play Store
+            </h3>
+            {appStores && (
+              <div className="flex justify-center mt-4">
+                <Image
+                  src={appStores.imageUrl}
+                  alt={appStores.description}
+                  width={400}
+                  height={100}
+                  data-ai-hint={appStores.imageHint}
+                />
+              </div>
+            )}
           </div>
         </CardContent>
         <CardFooter className="bg-muted/30 p-4">
