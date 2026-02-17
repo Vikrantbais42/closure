@@ -65,7 +65,7 @@ export default function Home() {
 
             <div className="space-y-4 text-center">
               <p className="text-lg leading-relaxed">
-                Mr. Manoj Kumar, owner of Saat Phere project, ne agreed kaam fully complete hone ke baad bhi <span className="font-bold text-primary">₹1,08,000/-</span> ka payment nhi kiya hai. or na hi Calls aur messages ka koi response diya ja raha hai
+                Mr. Manoj Kumar, owner of Saat Phere project, ne agreed kaam fully complete hone ke baad bhi <span className="font-bold text-primary">₹1,08,000/-</span> ka payment nhi kiya hai. or na hi Calls aur messages ka koi response diya ja raha hai. Unke ek business partner Mr. Rahul ne mujhe call kr k bola tha payment 10th feb 2026 tk ho jayegi tb tk k liye app yeh Project Closure Notice Hata dijiye or meine bhi whi kiya lekin aaj 17th feb ko jb meine Rahul ko call ki tho bo mujhe galt language ka use krne lge jis ki wjh se meine yeh Notice phr se aaj Live Kiya hai.... or yeh notice ab ni hatega.. jis ko jo krna ho bo kr sakte hai...
               </p>
               <p className="text-lg font-semibold text-primary">
                 Is wajah se, Saat Phere project band ho gaya hai aur kabhi bhi online nahi aayega.
