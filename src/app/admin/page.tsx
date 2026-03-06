@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDoc, useFirestore, errorEmitter, FirestorePermissionError } from '@/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,7 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Lock, Settings, LogOut, CheckCircle2 } from 'lucide-react';
+import { Lock, Settings, LogOut, CheckCircle2, Loader2 } from 'lucide-react';
 
 export default function AdminPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -22,6 +22,18 @@ export default function AdminPage() {
   const firestore = useFirestore();
   const settingsRef = firestore ? doc(firestore, 'settings', 'global') : null;
   const { data: settings, loading } = useDoc(settingsRef);
+
+  // Local state for textareas to ensure they are reactive but editable
+  const [textEn, setTextEn] = useState('');
+  const [textHi, setTextHi] = useState('');
+
+  // Sync local state when settings load
+  useEffect(() => {
+    if (settings) {
+      setTextEn(settings.closureNoticeTextEn || '');
+      setTextHi(settings.closureNoticeTextHi || '');
+    }
+  }, [settings]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,7 +51,6 @@ export default function AdminPage() {
   const handleUpdateSettings = (updates: any) => {
     if (!settingsRef) return;
     
-    // Non-blocking mutation with catch handler for permission errors
     setDoc(settingsRef, updates, { merge: true })
       .catch(async (serverError) => {
         const permissionError = new FirestorePermissionError({
@@ -105,15 +116,16 @@ export default function AdminPage() {
     );
   }
 
-  if (loading) return <div className="flex min-h-screen items-center justify-center">Loading settings...</div>;
-
   return (
     <main className="min-h-screen bg-muted/30 p-4 sm:p-8">
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Settings className="text-primary" />
-            <h1 className="text-3xl font-bold tracking-tight">Site Settings</h1>
+            <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
+              Site Settings
+              {loading && <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />}
+            </h1>
           </div>
           <Button variant="outline" size="sm" onClick={() => setIsLoggedIn(false)}>
             <LogOut className="mr-2 h-4 w-4" /> Logout
@@ -138,8 +150,9 @@ export default function AdminPage() {
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="closure"
-                  checked={settings?.showClosureNotice || false}
+                  checked={settings?.showClosureNotice ?? true}
                   onCheckedChange={(checked) => handleUpdateSettings({ showClosureNotice: !!checked })}
+                  disabled={loading}
                 />
                 <Label htmlFor="closure" className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                   Show Project Closure Notice
@@ -149,8 +162,9 @@ export default function AdminPage() {
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="onsale"
-                  checked={settings?.showOnSale || false}
+                  checked={settings?.showOnSale ?? false}
                   onCheckedChange={(checked) => handleUpdateSettings({ showOnSale: !!checked })}
+                  disabled={loading}
                 />
                 <Label htmlFor="onsale" className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-accent">
                   Show Project On Sale Notice
@@ -170,8 +184,11 @@ export default function AdminPage() {
                 <Textarea
                   id="textEn"
                   rows={4}
-                  defaultValue={settings?.closureNoticeTextEn || "The Owner of this domain and website has defaulted on payment of ₹1,08,000/- despite full completion of the agreed work. He has stopped responding to calls and messages."}
-                  onBlur={(e) => handleUpdateSettings({ closureNoticeTextEn: e.target.value })}
+                  placeholder="Enter English notice..."
+                  value={textEn}
+                  onChange={(e) => setTextEn(e.target.value)}
+                  onBlur={() => handleUpdateSettings({ closureNoticeTextEn: textEn })}
+                  disabled={loading && !settings}
                 />
               </div>
               <div className="space-y-2">
@@ -179,11 +196,17 @@ export default function AdminPage() {
                 <Textarea
                   id="textHi"
                   rows={6}
-                  defaultValue={settings?.closureNoticeTextHi || "The Owner of this domain and website ne agreed kaam fully complete hone ke baad bhi ₹1,08,000/- ka payment nhi kiya hai. or na hi Calls aur messages ka koi response diya ja raha hai. Unke ek business partner Mr. Rahul ne mujhe call kr k bola tha payment 10th feb 2026 tk ho jayegi tb tk k liye app yeh Project Closure Notice Hata dijiye or meine bhi whi kiya lekin aaj 17th feb ko jb meine Rahul ko call ki tho bo mujhe galt language ka use krne lge jis ki wjh se meine yeh Notice phr se aaj Live Kiya hai.... or yeh notice ab ni hatega.. jis ko jo krna ho bo kr sakte hai..."}
-                  onBlur={(e) => handleUpdateSettings({ closureNoticeTextHi: e.target.value })}
+                  placeholder="Enter Hinglish notice..."
+                  value={textHi}
+                  onChange={(e) => setTextHi(e.target.value)}
+                  onBlur={() => handleUpdateSettings({ closureNoticeTextHi: textHi })}
+                  disabled={loading && !settings}
                 />
               </div>
             </CardContent>
+            <CardFooter className="text-xs text-muted-foreground italic">
+              * Changes are saved automatically when you click outside the text box.
+            </CardFooter>
           </Card>
         </div>
       </div>
