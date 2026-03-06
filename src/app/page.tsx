@@ -31,8 +31,8 @@ export default function Home() {
   const showOnSale = settings?.showOnSale ?? false;
 
   // Dynamic Content with fallback defaults
-  const textEn = settings?.closureNoticeTextEn || "The Owner of this domain and website has defaulted on payment of ₹1,08,000/- despite full completion of the agreed work. This asset is now under liquidation.";
-  const textHi = settings?.closureNoticeTextHi || "The Owner of this domain and website ne agreed kaam fully complete hone ke baad bhi ₹1,08,000/- ka payment nhi kiya hai. Unke ek business partner Mr. Rahul ne payment ka jhoota vaada kiya tha, jis wajah se yeh Asset Acquisition Notice live kiya gaya hai. Yeh ab legal liquidation process mein hai.";
+  const textEn = settings?.closureNoticeTextEn || "This Project is on Sale. Kindly Contact saatphere25@gmail.com, at just ₹108000. Complete Source Code available";
+  const textHi = settings?.closureNoticeTextHi || "Yeh project sale k liye available hai. Contact kare saatphere25@gmail.com. kbl ₹108000 mein. Complete Source Code available";
   const saleInfo = settings?.saleInfoText || "The complete 'Saat Phere' project (Source Code, Domain, Branding) is available for immediate acquisition. Serious buyers only.";
 
   return (

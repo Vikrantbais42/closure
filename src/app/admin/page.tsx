@@ -40,8 +40,8 @@ export default function AdminPage() {
     if (settings && !hasInitialized.current && !saving) {
       setShowClosure(settings.showClosureNotice ?? true);
       setShowOnSale(settings.showOnSale ?? false);
-      setTextEn(settings.closureNoticeTextEn || '');
-      setTextHi(settings.closureNoticeTextHi || '');
+      setTextEn(settings.closureNoticeTextEn || "This Project is on Sale. Kindly Contact saatphere25@gmail.com, at just ₹108000. Complete Source Code available");
+      setTextHi(settings.closureNoticeTextHi || "Yeh project sale k liye available hai. Contact kare saatphere25@gmail.com. kbl ₹108000 mein. Complete Source Code available");
       setSaleInfo(settings.saleInfoText || '');
       hasInitialized.current = true;
     }
