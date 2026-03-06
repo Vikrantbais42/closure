@@ -10,7 +10,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Lock, Settings, LogOut, CheckCircle2, Loader2 } from 'lucide-react';
+import { Lock, Settings, LogOut, CheckCircle2, Loader2, ShoppingCart, Eye } from 'lucide-react';
+import Link from 'next/link';
 
 export default function AdminPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -23,15 +24,17 @@ export default function AdminPage() {
   const settingsRef = firestore ? doc(firestore, 'settings', 'global') : null;
   const { data: settings, loading } = useDoc(settingsRef);
 
-  // Local state for textareas to ensure they are reactive but editable
+  // Local state for textareas
   const [textEn, setTextEn] = useState('');
   const [textHi, setTextHi] = useState('');
+  const [saleInfo, setSaleInfo] = useState('');
 
   // Sync local state when settings load
   useEffect(() => {
     if (settings) {
       setTextEn(settings.closureNoticeTextEn || '');
       setTextHi(settings.closureNoticeTextHi || '');
+      setSaleInfo(settings.saleInfoText || '');
     }
   }, [settings]);
 
@@ -68,20 +71,20 @@ export default function AdminPage() {
   if (!isLoggedIn) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-muted/30 p-4">
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-md shadow-2xl border-primary/20">
           <CardHeader className="space-y-1">
             <div className="flex justify-center mb-2 text-primary">
-              <Lock size={40} />
+              <Lock size={48} />
             </div>
-            <CardTitle className="text-2xl text-center">Admin Login</CardTitle>
+            <CardTitle className="text-2xl text-center font-bold tracking-tight">System Control</CardTitle>
             <CardDescription className="text-center">
-              Enter your credentials to access the admin panel
+              Authenticate to manage project visibility and notices.
             </CardDescription>
           </CardHeader>
           <form onSubmit={handleLogin}>
             <CardContent className="grid gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Administrator Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -92,7 +95,7 @@ export default function AdminPage() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Security Password</Label>
                 <Input
                   id="password"
                   type="password"
@@ -108,7 +111,7 @@ export default function AdminPage() {
               )}
             </CardContent>
             <CardFooter>
-              <Button type="submit" className="w-full">Login</Button>
+              <Button type="submit" className="w-full h-12 text-lg font-bold">Access Panel</Button>
             </CardFooter>
           </form>
         </Card>
@@ -120,20 +123,30 @@ export default function AdminPage() {
     <main className="min-h-screen bg-muted/30 p-4 sm:p-8">
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Settings className="text-primary" />
-            <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-              Site Settings
-              {loading && <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />}
-            </h1>
+          <div className="flex items-center gap-3">
+            <div className="bg-primary p-2 rounded-lg text-white">
+              <Settings size={24} />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
+                Site Configuration
+                {loading && <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />}
+              </h1>
+              <p className="text-muted-foreground">Manage global visibility and project status notices.</p>
+            </div>
           </div>
-          <Button variant="outline" size="sm" onClick={() => setIsLoggedIn(false)}>
-            <LogOut className="mr-2 h-4 w-4" /> Logout
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/"><Eye className="mr-2 h-4 w-4" /> View Site</Link>
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => setIsLoggedIn(false)}>
+              <LogOut className="mr-2 h-4 w-4" /> Logout
+            </Button>
+          </div>
         </div>
 
         {success && (
-          <Alert className="bg-green-50 border-green-200 text-green-800">
+          <Alert className="bg-green-50 border-green-200 text-green-800 animate-in slide-in-from-top-4 duration-300">
             <CheckCircle2 className="h-4 w-4 text-green-600" />
             <AlertTitle>Success</AlertTitle>
             <AlertDescription>{success}</AlertDescription>
@@ -141,46 +154,68 @@ export default function AdminPage() {
         )}
 
         <div className="grid gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Visibility Toggles</CardTitle>
-              <CardDescription>Control which notices are active on the homepage.</CardDescription>
+          <Card className="border-2">
+            <CardHeader className="border-b bg-muted/10">
+              <CardTitle>Visibility Controls</CardTitle>
+              <CardDescription>Toggle active notices on the homepage.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="closure"
-                  checked={settings?.showClosureNotice ?? true}
-                  onCheckedChange={(checked) => handleUpdateSettings({ showClosureNotice: !!checked })}
-                  disabled={loading}
-                />
-                <Label htmlFor="closure" className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                  Show Project Closure Notice
-                </Label>
+            <CardContent className="grid sm:grid-cols-2 gap-8 p-6">
+              <div className="space-y-4 p-4 rounded-xl border-2 border-primary/10 bg-primary/5">
+                <div className="flex items-start space-x-3">
+                  <Checkbox
+                    id="closure"
+                    className="mt-1"
+                    checked={settings?.showClosureNotice ?? true}
+                    onCheckedChange={(checked) => handleUpdateSettings({ showClosureNotice: !!checked })}
+                    disabled={loading}
+                  />
+                  <div className="grid gap-1.5 leading-none">
+                    <Label htmlFor="closure" className="text-lg font-bold">Project Closure Notice</Label>
+                    <p className="text-sm text-muted-foreground">Show the main default payment notice card.</p>
+                  </div>
+                </div>
               </div>
 
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="onsale"
-                  checked={settings?.showOnSale ?? false}
-                  onCheckedChange={(checked) => handleUpdateSettings({ showOnSale: !!checked })}
-                  disabled={loading}
-                />
-                <Label htmlFor="onsale" className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-accent">
-                  Show Project On Sale Notice
-                </Label>
+              <div className="space-y-4 p-4 rounded-xl border-2 border-accent/20 bg-accent/5">
+                <div className="flex items-start space-x-3">
+                  <Checkbox
+                    id="onsale"
+                    className="mt-1"
+                    checked={settings?.showOnSale ?? false}
+                    onCheckedChange={(checked) => handleUpdateSettings({ showOnSale: !!checked })}
+                    disabled={loading}
+                  />
+                  <div className="grid gap-1.5 leading-none">
+                    <Label htmlFor="onsale" className="text-lg font-bold text-accent">Project On Sale Status</Label>
+                    <p className="text-sm text-muted-foreground">Transform the site into an "Asset Acquisition" view.</p>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Content Management</CardTitle>
-              <CardDescription>Update the text shown in the notices.</CardDescription>
+          <Card className="border-2">
+            <CardHeader className="border-b bg-muted/10">
+              <CardTitle>Content Editor</CardTitle>
+              <CardDescription>Update the narratives and sale information.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6 p-6">
               <div className="space-y-2">
-                <Label htmlFor="textEn">Closure Notice (English)</Label>
+                <Label htmlFor="saleInfo" className="text-accent font-bold">Acquisition Details (On Sale Text)</Label>
+                <Textarea
+                  id="saleInfo"
+                  rows={2}
+                  className="border-accent/20 focus-visible:ring-accent"
+                  placeholder="Details for serious buyers..."
+                  value={saleInfo}
+                  onChange={(e) => setSaleInfo(e.target.value)}
+                  onBlur={() => handleUpdateSettings({ saleInfoText: saleInfo })}
+                  disabled={loading && !settings}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="textEn" className="font-bold">Closure Notice (English)</Label>
                 <Textarea
                   id="textEn"
                   rows={4}
@@ -191,8 +226,9 @@ export default function AdminPage() {
                   disabled={loading && !settings}
                 />
               </div>
+
               <div className="space-y-2">
-                <Label htmlFor="textHi">Closure Notice (Hinglish)</Label>
+                <Label htmlFor="textHi" className="font-bold">Closure Notice (Hinglish)</Label>
                 <Textarea
                   id="textHi"
                   rows={6}
@@ -204,8 +240,8 @@ export default function AdminPage() {
                 />
               </div>
             </CardContent>
-            <CardFooter className="text-xs text-muted-foreground italic">
-              * Changes are saved automatically when you click outside the text box.
+            <CardFooter className="bg-muted/10 border-t py-3 text-xs text-muted-foreground italic flex justify-center">
+              Changes are committed automatically when you lose focus on a text field.
             </CardFooter>
           </Card>
         </div>
