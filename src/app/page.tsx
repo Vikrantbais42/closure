@@ -23,14 +23,13 @@ export default function Home() {
   const { data: settings, loading } = useDoc(settingsRef);
 
   const logo = PlaceHolderImages.find((p) => p.id === 'logo');
-  const clientPhoto = PlaceHolderImages.find((p) => p.id === 'client-photo');
   const appStores = PlaceHolderImages.find((p) => p.id === 'app-stores');
 
   // Logic for display toggles
   const showClosure = settings?.showClosureNotice ?? true;
   const showOnSale = settings?.showOnSale ?? false;
 
-  // Dynamic Content with specific defaults requested by user
+  // Dynamic Content with specific defaults
   const textEn = settings?.closureNoticeTextEn || "This Project is on Sale. Kindly Contact saatphere25@gmail.com, at just ₹108000. Complete Source Code available";
   const textHi = settings?.closureNoticeTextHi || "Yeh project sale k liye available hai. Contact kare saatphere25@gmail.com. kbl ₹108000 mein. Complete Source Code available";
   const saleInfo = settings?.saleInfoText || "The complete 'Saat Phere' project (Source Code, Domain, Branding) is available for immediate acquisition. Serious buyers only.";
@@ -61,12 +60,13 @@ export default function Home() {
 
           <CardHeader className="bg-white p-6 sm:p-10">
             <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-8">
+              {/* Left Logo */}
               {logo && (
                 <Image
                   src={logo.imageUrl}
                   alt={logo.description}
-                  width={150}
-                  height={150}
+                  width={140}
+                  height={140}
                   data-ai-hint={logo.imageHint}
                   className={cn(
                     "rounded-2xl border-2 shadow-lg transition-colors duration-500",
@@ -75,6 +75,7 @@ export default function Home() {
                   priority
                 />
               )}
+              
               <div className="text-center flex-1 space-y-2">
                 <div className={cn(
                   "flex items-center justify-center gap-3 mb-2 transition-colors duration-500",
@@ -91,22 +92,21 @@ export default function Home() {
                     : "Legal Notice Regarding Asset Default & Liquidation"}
                 </CardDescription>
               </div>
-              {clientPhoto && (
-                <div className="relative">
-                  <Image
-                    src={clientPhoto.imageUrl}
-                    alt={clientPhoto.description}
-                    width={150}
-                    height={150}
-                    data-ai-hint={clientPhoto.imageHint}
-                    className={cn(
-                      "rounded-2xl border-2 shadow-lg transition-colors duration-500",
-                      showOnSale ? "border-accent" : "border-primary/10"
-                    )}
-                    priority
-                  />
-                  <Badge className="absolute -bottom-2 -right-2 bg-red-600">Defaulted</Badge>
-                </div>
+
+              {/* Right Logo (Symmetrical) */}
+              {logo && (
+                <Image
+                  src={logo.imageUrl}
+                  alt={logo.description}
+                  width={140}
+                  height={140}
+                  data-ai-hint={logo.imageHint}
+                  className={cn(
+                    "rounded-2xl border-2 shadow-lg transition-colors duration-500",
+                    showOnSale ? "border-accent" : "border-primary/10"
+                  )}
+                  priority
+                />
               )}
             </div>
           </CardHeader>
