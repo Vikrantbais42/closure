@@ -30,7 +30,7 @@ export default function Home() {
   const showClosure = settings?.showClosureNotice ?? true;
   const showOnSale = settings?.showOnSale ?? false;
 
-  // Dynamic Content
+  // Dynamic Content with fallback defaults
   const textEn = settings?.closureNoticeTextEn || "The Owner of this domain and website has defaulted on payment of ₹1,08,000/- despite full completion of the agreed work. He has stopped responding to calls and messages.";
   const textHi = settings?.closureNoticeTextHi || "The Owner of this domain and website ne agreed kaam fully complete hone ke baad bhi ₹1,08,000/- ka payment nhi kiya hai. or na hi Calls aur messages ka koi response diya ja raha hai. Unke ek business partner Mr. Rahul ne mujhe call kr k bola tha payment 10th feb 2026 tk ho jayegi tb tk k liye app yeh Project Closure Notice Hata dijiye or meine bhi whi kiya lekin aaj 17th feb ko jb meine Rahul ko call ki tho bo mujhe galt language ka use krne lge jis ki wjh se meine yeh Notice phr se aaj Live Kiya hai.... or yeh notice ab ni hatega.. jis ko jo krna ho bo kr sakte hai...";
   const saleInfo = settings?.saleInfoText || "This complete project including source code, domain, and branding assets is available for immediate acquisition. Serious inquiries only.";
@@ -130,12 +130,11 @@ export default function Home() {
                     <p className="text-xl leading-relaxed font-medium">
                       {textEn}
                     </p>
-                    <p className={cn(
-                      "text-xl font-bold transition-colors duration-500",
-                      showOnSale ? "text-accent" : "text-primary"
-                    )}>
-                      Due to these circumstances, the Saat Phere project is closed and is now being liquidated.
-                    </p>
+                    {!showOnSale && (
+                      <p className="text-xl font-bold text-primary">
+                        Due to these circumstances, the Saat Phere project is closed and is now being liquidated.
+                      </p>
+                    )}
                   </div>
 
                   <Separator />
@@ -144,12 +143,11 @@ export default function Home() {
                     <p className="text-xl leading-relaxed">
                       {textHi}
                     </p>
-                    <p className={cn(
-                      "text-xl font-bold transition-colors duration-500",
-                      showOnSale ? "text-accent" : "text-primary"
-                    )}>
-                      Is wajah se, Saat Phere project band ho gaya hai aur ise ab becha ja raha hai.
-                    </p>
+                    {!showOnSale && (
+                      <p className="text-xl font-bold text-primary">
+                        Is wajah se, Saat Phere project band ho gaya hai aur ise ab becha ja raha hai.
+                      </p>
+                    )}
                   </div>
                 </div>
               )}
@@ -203,12 +201,12 @@ export default function Home() {
           </CardContent>
           <CardFooter className="bg-muted/30 p-4 border-t">
             <p className="w-full text-center text-sm font-medium text-muted-foreground">
-              Official Status Page - Document Version 2.1 - {new Date().getFullYear()}
+              Official Status Page - Document Version 2.2 - {new Date().getFullYear()}
             </p>
           </CardFooter>
         </Card>
       ) : (
-        /* Empty State (Maintenance) */
+        /* Empty State (Maintenance/Hidden) */
         <div className="text-center space-y-4 animate-in fade-in zoom-in duration-500">
           <div className="bg-primary/10 p-8 rounded-full inline-block">
             <Loader2 className="text-primary w-16 h-16 animate-spin" />

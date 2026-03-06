@@ -10,7 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Lock, Settings, LogOut, CheckCircle2, Loader2, ShoppingCart, Eye } from 'lucide-react';
+import { Lock, Settings, LogOut, CheckCircle2, Loader2, ShoppingCart, Eye, Save } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AdminPage() {
@@ -19,19 +19,24 @@ export default function AdminPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [saving, setSaving] = useState(false);
 
   const firestore = useFirestore();
   const settingsRef = firestore ? doc(firestore, 'settings', 'global') : null;
   const { data: settings, loading } = useDoc(settingsRef);
 
-  // Local state for textareas
+  // Local state for all fields to allow bulk saving
+  const [showClosure, setShowClosure] = useState(true);
+  const [showOnSale, setShowOnSale] = useState(false);
   const [textEn, setTextEn] = useState('');
   const [textHi, setTextHi] = useState('');
   const [saleInfo, setSaleInfo] = useState('');
 
-  // Sync local state when settings load
+  // Sync local state when settings load for the first time
   useEffect(() => {
     if (settings) {
+      setShowClosure(settings.showClosureNotice ?? true);
+      setShowOnSale(settings.showOnSale ?? false);
       setTextEn(settings.closureNoticeTextEn || '');
       setTextHi(settings.closureNoticeTextHi || '');
       setSaleInfo(settings.saleInfoText || '');
@@ -51,21 +56,33 @@ export default function AdminPage() {
     }
   };
 
-  const handleUpdateSettings = (updates: any) => {
+  const handleSaveAll = async () => {
     if (!settingsRef) return;
+    setSaving(true);
     
-    setDoc(settingsRef, updates, { merge: true })
-      .catch(async (serverError) => {
-        const permissionError = new FirestorePermissionError({
-          path: settingsRef.path,
-          operation: 'update',
-          requestResourceData: updates,
-        });
-        errorEmitter.emit('permission-error', permissionError);
-      });
+    const updates = {
+      showClosureNotice: showClosure,
+      showOnSale: showOnSale,
+      closureNoticeTextEn: textEn,
+      closureNoticeTextHi: textHi,
+      saleInfoText: saleInfo,
+    };
 
-    setSuccess('Settings updated successfully!');
-    setTimeout(() => setSuccess(''), 3000);
+    try {
+      await setDoc(settingsRef, updates, { merge: true });
+      setSuccess('All changes saved successfully!');
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (serverError) {
+      const permissionError = new FirestorePermissionError({
+        path: settingsRef.path,
+        operation: 'update',
+        requestResourceData: updates,
+      });
+      errorEmitter.emit('permission-error', permissionError);
+      setError('Failed to save settings. Check permissions.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (!isLoggedIn) {
@@ -121,7 +138,7 @@ export default function AdminPage() {
 
   return (
     <main className="min-h-screen bg-muted/30 p-4 sm:p-8">
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="max-w-4xl mx-auto space-y-6 pb-20">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="bg-primary p-2 rounded-lg text-white">
@@ -154,7 +171,7 @@ export default function AdminPage() {
         )}
 
         <div className="grid gap-6">
-          <Card className="border-2">
+          <Card className="border-2 shadow-sm">
             <CardHeader className="border-b bg-muted/10">
               <CardTitle>Visibility Controls</CardTitle>
               <CardDescription>Toggle active notices on the homepage.</CardDescription>
@@ -165,11 +182,10 @@ export default function AdminPage() {
                   <Checkbox
                     id="closure"
                     className="mt-1"
-                    checked={settings?.showClosureNotice ?? true}
-                    onCheckedChange={(checked) => handleUpdateSettings({ showClosureNotice: !!checked })}
-                    disabled={loading}
+                    checked={showClosure}
+                    onCheckedChange={(checked) => setShowClosure(!!checked)}
                   />
-                  <div className="grid gap-1.5 leading-none">
+                  <div className="grid gap-1.5 leading-none cursor-pointer" onClick={() => setShowClosure(!showClosure)}>
                     <Label htmlFor="closure" className="text-lg font-bold">Project Closure Notice</Label>
                     <p className="text-sm text-muted-foreground">Show the main default payment notice card.</p>
                   </div>
@@ -181,11 +197,10 @@ export default function AdminPage() {
                   <Checkbox
                     id="onsale"
                     className="mt-1"
-                    checked={settings?.showOnSale ?? false}
-                    onCheckedChange={(checked) => handleUpdateSettings({ showOnSale: !!checked })}
-                    disabled={loading}
+                    checked={showOnSale}
+                    onCheckedChange={(checked) => setShowOnSale(!!checked)}
                   />
-                  <div className="grid gap-1.5 leading-none">
+                  <div className="grid gap-1.5 leading-none cursor-pointer" onClick={() => setShowOnSale(!showOnSale)}>
                     <Label htmlFor="onsale" className="text-lg font-bold text-accent">Project On Sale Status</Label>
                     <p className="text-sm text-muted-foreground">Transform the site into an "Asset Acquisition" view.</p>
                   </div>
@@ -194,7 +209,7 @@ export default function AdminPage() {
             </CardContent>
           </Card>
 
-          <Card className="border-2">
+          <Card className="border-2 shadow-sm">
             <CardHeader className="border-b bg-muted/10">
               <CardTitle>Content Editor</CardTitle>
               <CardDescription>Update the narratives and sale information.</CardDescription>
@@ -209,8 +224,6 @@ export default function AdminPage() {
                   placeholder="Details for serious buyers..."
                   value={saleInfo}
                   onChange={(e) => setSaleInfo(e.target.value)}
-                  onBlur={() => handleUpdateSettings({ saleInfoText: saleInfo })}
-                  disabled={loading && !settings}
                 />
               </div>
 
@@ -222,8 +235,6 @@ export default function AdminPage() {
                   placeholder="Enter English notice..."
                   value={textEn}
                   onChange={(e) => setTextEn(e.target.value)}
-                  onBlur={() => handleUpdateSettings({ closureNoticeTextEn: textEn })}
-                  disabled={loading && !settings}
                 />
               </div>
 
@@ -235,15 +246,23 @@ export default function AdminPage() {
                   placeholder="Enter Hinglish notice..."
                   value={textHi}
                   onChange={(e) => setTextHi(e.target.value)}
-                  onBlur={() => handleUpdateSettings({ closureNoticeTextHi: textHi })}
-                  disabled={loading && !settings}
                 />
               </div>
             </CardContent>
-            <CardFooter className="bg-muted/10 border-t py-3 text-xs text-muted-foreground italic flex justify-center">
-              Changes are committed automatically when you lose focus on a text field.
-            </CardFooter>
           </Card>
+        </div>
+
+        {/* Floating Save Button */}
+        <div className="fixed bottom-8 left-0 right-0 flex justify-center px-4">
+          <Button 
+            size="lg" 
+            className="shadow-2xl px-8 h-14 text-lg font-bold gap-2"
+            onClick={handleSaveAll}
+            disabled={saving || loading}
+          >
+            {saving ? <Loader2 className="animate-spin" /> : <Save />}
+            {saving ? 'Saving...' : 'Save All Changes'}
+          </Button>
         </div>
       </div>
     </main>
