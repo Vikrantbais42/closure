@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDoc, useFirestore, errorEmitter, FirestorePermissionError } from '@/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,7 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Lock, Settings, LogOut, CheckCircle2, Loader2, ShoppingCart, Eye, Save } from 'lucide-react';
+import { Lock, Settings, LogOut, CheckCircle2, Loader2, ShoppingCart, Eye, Save, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AdminPage() {
@@ -25,23 +25,27 @@ export default function AdminPage() {
   const settingsRef = firestore ? doc(firestore, 'settings', 'global') : null;
   const { data: settings, loading } = useDoc(settingsRef);
 
-  // Local state for all fields to allow bulk saving
+  // Local state for all fields
   const [showClosure, setShowClosure] = useState(true);
   const [showOnSale, setShowOnSale] = useState(false);
   const [textEn, setTextEn] = useState('');
   const [textHi, setTextHi] = useState('');
   const [saleInfo, setSaleInfo] = useState('');
 
-  // Sync local state when settings load for the first time
+  // Use a ref to track if we've initialized local state from server data
+  const hasInitialized = useRef(false);
+
+  // Sync local state when settings load for the first time ONLY
   useEffect(() => {
-    if (settings) {
+    if (settings && !hasInitialized.current && !saving) {
       setShowClosure(settings.showClosureNotice ?? true);
       setShowOnSale(settings.showOnSale ?? false);
       setTextEn(settings.closureNoticeTextEn || '');
       setTextHi(settings.closureNoticeTextHi || '');
       setSaleInfo(settings.saleInfoText || '');
+      hasInitialized.current = true;
     }
-  }, [settings]);
+  }, [settings, saving]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,8 +61,14 @@ export default function AdminPage() {
   };
 
   const handleSaveAll = async () => {
-    if (!settingsRef) return;
+    if (!settingsRef) {
+      setError('System Error: Firestore not initialized.');
+      return;
+    }
+    
     setSaving(true);
+    setError('');
+    setSuccess('');
     
     const updates = {
       showClosureNotice: showClosure,
@@ -66,20 +76,32 @@ export default function AdminPage() {
       closureNoticeTextEn: textEn,
       closureNoticeTextHi: textHi,
       saleInfoText: saleInfo,
+      lastUpdated: new Date().toISOString(),
     };
 
     try {
-      await setDoc(settingsRef, updates, { merge: true });
+      // Use a timeout to prevent infinite "Saving" state if network hangs
+      const savePromise = setDoc(settingsRef, updates, { merge: true });
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timed out. Please check your connection.')), 10000)
+      );
+
+      await Promise.race([savePromise, timeoutPromise]);
+      
       setSuccess('All changes saved successfully!');
-      setTimeout(() => setSuccess(''), 3000);
-    } catch (serverError) {
-      const permissionError = new FirestorePermissionError({
-        path: settingsRef.path,
-        operation: 'update',
-        requestResourceData: updates,
-      });
-      errorEmitter.emit('permission-error', permissionError);
-      setError('Failed to save settings. Check permissions.');
+      setTimeout(() => setSuccess(''), 4000);
+    } catch (err: any) {
+      console.error('Save error:', err);
+      setError(err.message || 'Failed to save changes. Please try again.');
+      
+      if (err.code === 'permission-denied') {
+        const permissionError = new FirestorePermissionError({
+          path: settingsRef.path,
+          operation: 'update',
+          requestResourceData: updates,
+        });
+        errorEmitter.emit('permission-error', permissionError);
+      }
     } finally {
       setSaving(false);
     }
@@ -123,6 +145,7 @@ export default function AdminPage() {
               </div>
               {error && (
                 <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
@@ -138,7 +161,7 @@ export default function AdminPage() {
 
   return (
     <main className="min-h-screen bg-muted/30 p-4 sm:p-8">
-      <div className="max-w-4xl mx-auto space-y-6 pb-20">
+      <div className="max-w-4xl mx-auto space-y-6 pb-24">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="bg-primary p-2 rounded-lg text-white">
@@ -147,7 +170,7 @@ export default function AdminPage() {
             <div>
               <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
                 Site Configuration
-                {loading && <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />}
+                {(loading || saving) && <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />}
               </h1>
               <p className="text-muted-foreground">Manage global visibility and project status notices.</p>
             </div>
@@ -170,6 +193,14 @@ export default function AdminPage() {
           </Alert>
         )}
 
+        {error && (
+          <Alert variant="destructive" className="animate-in shake duration-300">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
         <div className="grid gap-6">
           <Card className="border-2 shadow-sm">
             <CardHeader className="border-b bg-muted/10">
@@ -177,7 +208,7 @@ export default function AdminPage() {
               <CardDescription>Toggle active notices on the homepage.</CardDescription>
             </CardHeader>
             <CardContent className="grid sm:grid-cols-2 gap-8 p-6">
-              <div className="space-y-4 p-4 rounded-xl border-2 border-primary/10 bg-primary/5">
+              <div className={`space-y-4 p-4 rounded-xl border-2 transition-colors ${showClosure ? 'border-primary/20 bg-primary/5' : 'border-muted bg-muted/5'}`}>
                 <div className="flex items-start space-x-3">
                   <Checkbox
                     id="closure"
@@ -187,12 +218,12 @@ export default function AdminPage() {
                   />
                   <div className="grid gap-1.5 leading-none cursor-pointer" onClick={() => setShowClosure(!showClosure)}>
                     <Label htmlFor="closure" className="text-lg font-bold">Project Closure Notice</Label>
-                    <p className="text-sm text-muted-foreground">Show the main default payment notice card.</p>
+                    <p className="text-sm text-muted-foreground">Show the main payment default notice card.</p>
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-4 p-4 rounded-xl border-2 border-accent/20 bg-accent/5">
+              <div className={`space-y-4 p-4 rounded-xl border-2 transition-colors ${showOnSale ? 'border-accent/40 bg-accent/5' : 'border-muted bg-muted/5'}`}>
                 <div className="flex items-start space-x-3">
                   <Checkbox
                     id="onsale"
@@ -201,7 +232,7 @@ export default function AdminPage() {
                     onCheckedChange={(checked) => setShowOnSale(!!checked)}
                   />
                   <div className="grid gap-1.5 leading-none cursor-pointer" onClick={() => setShowOnSale(!showOnSale)}>
-                    <Label htmlFor="onsale" className="text-lg font-bold text-accent">Project On Sale Status</Label>
+                    <Label htmlFor="onsale" className={`text-lg font-bold ${showOnSale ? 'text-accent' : ''}`}>Project On Sale Status</Label>
                     <p className="text-sm text-muted-foreground">Transform the site into an "Asset Acquisition" view.</p>
                   </div>
                 </div>
@@ -216,7 +247,9 @@ export default function AdminPage() {
             </CardHeader>
             <CardContent className="space-y-6 p-6">
               <div className="space-y-2">
-                <Label htmlFor="saleInfo" className="text-accent font-bold">Acquisition Details (On Sale Text)</Label>
+                <Label htmlFor="saleInfo" className="text-accent font-bold flex items-center gap-2">
+                  <ShoppingCart size={16} /> Acquisition Details (On Sale Text)
+                </Label>
                 <Textarea
                   id="saleInfo"
                   rows={2}
@@ -253,15 +286,15 @@ export default function AdminPage() {
         </div>
 
         {/* Floating Save Button */}
-        <div className="fixed bottom-8 left-0 right-0 flex justify-center px-4">
+        <div className="fixed bottom-8 left-0 right-0 flex justify-center px-4 z-50">
           <Button 
             size="lg" 
-            className="shadow-2xl px-8 h-14 text-lg font-bold gap-2"
+            className="shadow-2xl px-8 h-14 text-lg font-bold gap-2 min-w-[240px]"
             onClick={handleSaveAll}
             disabled={saving || loading}
           >
-            {saving ? <Loader2 className="animate-spin" /> : <Save />}
-            {saving ? 'Saving...' : 'Save All Changes'}
+            {saving ? <Loader2 className="animate-spin h-5 w-5" /> : <Save className="h-5 w-5" />}
+            {saving ? 'Saving Changes...' : 'Save All Changes'}
           </Button>
         </div>
       </div>
