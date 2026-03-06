@@ -1,9 +1,10 @@
 import type {Metadata} from 'next';
 import './globals.css';
+import { FirebaseClientProvider } from '@/firebase';
 
 export const metadata: Metadata = {
-  title: 'Project Closure Notice',
-  description: 'Notice of project closure due to non-payment.',
+  title: 'Project Status',
+  description: 'Project information and updates.',
 };
 
 export default function RootLayout({
@@ -19,7 +20,11 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased">{children}</body>
+      <body className="font-body antialiased">
+        <FirebaseClientProvider>
+          {children}
+        </FirebaseClientProvider>
+      </body>
     </html>
   );
 }

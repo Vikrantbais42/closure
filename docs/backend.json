@@ -1,0 +1,43 @@
+
+{
+  "entities": {
+    "SiteSettings": {
+      "title": "Site Settings",
+      "description": "Configuration for the site notices and status.",
+      "type": "object",
+      "properties": {
+        "showClosureNotice": {
+          "type": "boolean",
+          "description": "Whether to display the project closure notice."
+        },
+        "showOnSale": {
+          "type": "boolean",
+          "description": "Whether to display the project on sale notice."
+        },
+        "closureNoticeTextEn": {
+          "type": "string",
+          "description": "The English text for the closure notice."
+        },
+        "closureNoticeTextHi": {
+          "type": "string",
+          "description": "The Hinglish text for the closure notice."
+        }
+      },
+      "required": [
+        "showClosureNotice",
+        "showOnSale"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password"
+    ]
+  },
+  "firestore": {
+    "/settings/global": {
+      "schema": "SiteSettings",
+      "description": "Global site configuration document."
+    }
+  }
+}
