@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from 'next/image';
@@ -15,7 +14,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Badge } from '@/components/ui/badge';
-import { ShoppingCart, AlertTriangle, Loader2, Info } from 'lucide-react';
+import { ShoppingCart, AlertTriangle, Loader2, Info, Gavel } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function Home() {
@@ -32,12 +31,12 @@ export default function Home() {
   const showOnSale = settings?.showOnSale ?? false;
 
   // Dynamic Content with fallback defaults
-  const textEn = settings?.closureNoticeTextEn || "The Owner of this domain and website has defaulted on payment of ₹1,08,000/- despite full completion of the agreed work. He has stopped responding to calls and messages.";
-  const textHi = settings?.closureNoticeTextHi || "The Owner of this domain and website ne agreed kaam fully complete hone ke baad bhi ₹1,08,000/- ka payment nhi kiya hai. or na hi Calls aur messages ka koi response diya ja raha hai. Unke ek business partner Mr. Rahul ne mujhe call kr k bola tha payment 10th feb 2026 tk ho jayegi tb tk k liye app yeh Project Closure Notice Hata dijiye or meine bhi whi kiya lekin aaj 17th feb ko jb meine Rahul ko call ki tho bo mujhe galt language ka use krne lge jis ki wjh se meine yeh Notice phr se aaj Live Kiya hai.... or yeh notice ab ni hatega.. jis ko jo krna ho bo kr sakte hai...";
-  const saleInfo = settings?.saleInfoText || "This complete project including source code, domain, and branding assets is available for immediate acquisition. Serious inquiries only.";
+  const textEn = settings?.closureNoticeTextEn || "The Owner of this domain and website has defaulted on payment of ₹1,08,000/- despite full completion of the agreed work. This asset is now under liquidation.";
+  const textHi = settings?.closureNoticeTextHi || "The Owner of this domain and website ne agreed kaam fully complete hone ke baad bhi ₹1,08,000/- ka payment nhi kiya hai. Unke ek business partner Mr. Rahul ne payment ka jhoota vaada kiya tha, jis wajah se yeh Asset Acquisition Notice live kiya gaya hai. Yeh ab legal liquidation process mein hai.";
+  const saleInfo = settings?.saleInfoText || "The complete 'Saat Phere' project (Source Code, Domain, Branding) is available for immediate acquisition. Serious buyers only.";
 
   return (
-    <main className="relative flex min-h-screen w-full flex-col items-center justify-center bg-background p-4 sm:p-6 md:p-8 gap-6 transition-colors duration-500">
+    <main className="relative flex min-h-screen w-full flex-col items-center justify-center bg-[#f8f9fa] p-4 sm:p-6 md:p-8 gap-6 transition-colors duration-500">
       
       {loading && (
         <div className="fixed top-4 right-4 animate-spin text-muted-foreground/30 z-50">
@@ -48,77 +47,80 @@ export default function Home() {
       {/* Main Notice Container */}
       {(showClosure || showOnSale) ? (
         <Card className={cn(
-          "w-full max-w-5xl overflow-hidden rounded-2xl shadow-2xl border-2 transition-all duration-500",
-          showOnSale ? "border-accent/40 shadow-accent/10" : "border-primary/10"
+          "w-full max-w-5xl overflow-hidden rounded-3xl shadow-2xl border-4 transition-all duration-500",
+          showOnSale ? "border-accent shadow-accent/20" : "border-primary/20"
         )}>
           {/* Status Header */}
           {showOnSale && (
-            <div className="bg-accent text-accent-foreground p-3 flex items-center justify-center gap-2 font-bold animate-pulse">
-              <ShoppingCart size={18} />
-              <span>OFFER: PROJECT AVAILABLE FOR SALE</span>
-              <Badge variant="outline" className="bg-white/20 text-white border-white/40 ml-2">Limited Time</Badge>
+            <div className="bg-accent text-accent-foreground p-3 flex items-center justify-center gap-2 font-bold animate-pulse uppercase tracking-widest text-sm">
+              <Gavel size={18} />
+              <span>Public Listing: Asset for Immediate Acquisition</span>
+              <Badge variant="outline" className="bg-black/10 text-black border-black/20 ml-2">Active</Badge>
             </div>
           )}
 
-          <CardHeader className="bg-card p-4 sm:p-8">
-            <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-6">
+          <CardHeader className="bg-white p-6 sm:p-10">
+            <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-8">
               {logo && (
                 <Image
                   src={logo.imageUrl}
                   alt={logo.description}
-                  width={140}
-                  height={140}
+                  width={150}
+                  height={150}
                   data-ai-hint={logo.imageHint}
                   className={cn(
-                    "rounded-full border-4 transition-colors duration-500",
-                    showOnSale ? "border-accent/40" : "border-primary/20"
+                    "rounded-2xl border-2 shadow-lg transition-colors duration-500",
+                    showOnSale ? "border-accent" : "border-primary/10"
                   )}
                   priority
                 />
               )}
-              <div className="text-center flex-1">
+              <div className="text-center flex-1 space-y-2">
                 <div className={cn(
                   "flex items-center justify-center gap-3 mb-2 transition-colors duration-500",
                   showOnSale ? "text-accent" : "text-primary"
                 )}>
-                  {showOnSale ? <ShoppingCart size={32} /> : <AlertTriangle size={32} />}
-                  <CardTitle className="text-2xl sm:text-4xl font-black tracking-tighter uppercase font-headline">
+                  {showOnSale ? <ShoppingCart size={40} /> : <AlertTriangle size={40} />}
+                  <CardTitle className="text-3xl sm:text-5xl font-black tracking-tighter uppercase font-headline">
                     Asset Acquisition Notice
                   </CardTitle>
                 </div>
-                <CardDescription className="pt-2 text-lg font-medium">
+                <CardDescription className="text-xl font-semibold text-foreground/70">
                   {showOnSale 
-                    ? "The 'Saat Phere' project is officially listed for sale." 
-                    : "Important announcement regarding the 'Saat Phere' project status."}
+                    ? "Official Liquidation & Sales Registry" 
+                    : "Legal Notice Regarding Asset Default & Liquidation"}
                 </CardDescription>
               </div>
               {clientPhoto && (
-                <Image
-                  src={clientPhoto.imageUrl}
-                  alt={clientPhoto.description}
-                  width={140}
-                  height={140}
-                  data-ai-hint={clientPhoto.imageHint}
-                  className={cn(
-                    "rounded-full border-4 transition-colors duration-500",
-                    showOnSale ? "border-accent/40" : "border-primary/20"
-                  )}
-                  priority
-                />
+                <div className="relative">
+                  <Image
+                    src={clientPhoto.imageUrl}
+                    alt={clientPhoto.description}
+                    width={150}
+                    height={150}
+                    data-ai-hint={clientPhoto.imageHint}
+                    className={cn(
+                      "rounded-2xl border-2 shadow-lg transition-colors duration-500",
+                      showOnSale ? "border-accent" : "border-primary/10"
+                    )}
+                    priority
+                  />
+                  <Badge className="absolute -bottom-2 -right-2 bg-red-600">Defaulted</Badge>
+                </div>
               )}
             </div>
           </CardHeader>
 
-          <CardContent className="p-4 sm:p-8">
-            <div className="space-y-8">
+          <CardContent className="p-6 sm:p-10 bg-white">
+            <div className="space-y-10">
               {/* Sale Context Section */}
               {showOnSale && (
-                <div className="bg-accent/5 border border-accent/20 rounded-xl p-6 text-center space-y-3">
-                  <div className="flex items-center justify-center gap-2 text-accent font-bold text-xl uppercase tracking-wider">
-                    <Info size={20} />
-                    Acquisition Details
+                <div className="bg-accent/10 border-2 border-accent/30 rounded-2xl p-8 text-center space-y-4 shadow-inner">
+                  <div className="flex items-center justify-center gap-2 text-accent font-black text-2xl uppercase tracking-widest">
+                    <Info size={24} />
+                    Acquisition Terms
                   </div>
-                  <p className="text-lg text-foreground/90 italic">
+                  <p className="text-2xl text-foreground font-bold italic leading-tight">
                     "{saleInfo}"
                   </p>
                 </div>
@@ -126,94 +128,91 @@ export default function Home() {
 
               {/* Default Notice Section */}
               {showClosure && (
-                <div className="space-y-6 text-foreground">
-                  <div className="space-y-4 text-center">
-                    <p className="text-xl leading-relaxed font-medium">
+                <div className="space-y-8 text-foreground">
+                  <div className="space-y-6 text-center max-w-4xl mx-auto">
+                    <p className="text-2xl leading-relaxed font-bold text-foreground/80">
                       {textEn}
                     </p>
-                    {!showOnSale && (
-                      <p className="text-xl font-bold text-primary">
-                        Due to these circumstances, the Saat Phere project is closed and is now being liquidated.
-                      </p>
-                    )}
-                  </div>
-
-                  <Separator />
-
-                  <div className="space-y-4 text-center">
-                    <p className="text-xl leading-relaxed">
+                    <Separator className="bg-primary/10" />
+                    <p className="text-2xl leading-relaxed font-medium">
                       {textHi}
                     </p>
-                    {!showOnSale && (
-                      <p className="text-xl font-bold text-primary">
-                        Is wajah se, Saat Phere project band ho gaya hai aur ise ab becha ja raha hai.
-                      </p>
-                    )}
                   </div>
+
+                  {!showOnSale && (
+                    <div className="bg-primary/5 border border-primary/20 rounded-xl p-6 text-center">
+                      <p className="text-xl font-black text-primary uppercase tracking-tighter">
+                        Status: Frozen / Liquidation Pending
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
 
-              <Separator className="my-8" />
+              <Separator />
 
               {/* Information Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-4 text-center md:text-left">
-                  <h3 className={cn("text-lg font-bold uppercase tracking-widest", showOnSale ? "text-accent" : "text-primary")}>
-                    Owner/Client Record
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div className="space-y-4 p-6 bg-muted/20 rounded-2xl border border-dashed">
+                  <h3 className={cn("text-lg font-black uppercase tracking-widest flex items-center gap-2", showOnSale ? "text-accent" : "text-primary")}>
+                    Owner of this domain and website Record
                   </h3>
-                  <div className="text-muted-foreground space-y-1">
-                    <p><span className="font-bold text-foreground">Name:</span> Manoj Kumar</p>
-                    <p><span className="font-bold text-foreground">Address:</span> Vijay Nagar Chauraha, Etawah</p>
+                  <div className="text-foreground/70 space-y-2 text-lg">
+                    <p><span className="font-bold text-foreground">Subject:</span> Vijay Nagar Chauraha, Etawah</p>
+                    <p><span className="font-bold text-foreground">Reference:</span> Asset Payment Default #108K</p>
                   </div>
                 </div>
 
-                <div className="space-y-4 text-center md:text-right">
-                  <h3 className={cn("text-lg font-bold uppercase tracking-widest", showOnSale ? "text-accent" : "text-primary")}>
-                    Project Status
+                <div className="space-y-4 p-6 bg-muted/20 rounded-2xl border border-dashed flex flex-col justify-center">
+                  <h3 className={cn("text-lg font-black uppercase tracking-widest mb-2", showOnSale ? "text-accent" : "text-primary")}>
+                    Registry Status
                   </h3>
-                  <div className="flex flex-col items-center md:items-end gap-2">
-                    <Badge variant="destructive" className="w-fit">Permanently Offline</Badge>
-                    {showOnSale && <Badge variant="secondary" className="w-fit bg-accent text-accent-foreground">Available for Purchase</Badge>}
+                  <div className="flex flex-col gap-3">
+                    <Badge variant="destructive" className="w-fit text-md py-1 px-4">OFFLINE PERMANENTLY</Badge>
+                    {showOnSale && <Badge variant="secondary" className="w-fit bg-accent text-accent-foreground text-md py-1 px-4">AVAILABLE FOR BID</Badge>}
                   </div>
                 </div>
               </div>
 
-              <Separator className="my-8" />
+              <Separator />
 
               {/* Footer Media */}
-              <div className="space-y-6 text-center">
-                <h3 className="text-lg font-bold text-muted-foreground uppercase tracking-widest">
-                  App Removed from App Store and Play Store
+              <div className="space-y-8 text-center pt-4">
+                <h3 className="text-xl font-black text-muted-foreground uppercase tracking-tighter">
+                  Platform De-listed & Mobile Assets Terminated
                 </h3>
                 {appStores && (
                   <div className="flex justify-center">
                     <Image
                       src={appStores.imageUrl}
                       alt={appStores.description}
-                      width={600}
-                      height={150}
+                      width={700}
+                      height={180}
                       data-ai-hint={appStores.imageHint}
-                      className="opacity-80 grayscale hover:grayscale-0 transition-all duration-300"
+                      className="opacity-40 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500 cursor-not-allowed"
                     />
                   </div>
                 )}
               </div>
             </div>
           </CardContent>
-          <CardFooter className="bg-muted/30 p-4 border-t">
-            <p className="w-full text-center text-sm font-medium text-muted-foreground">
-              Official Status Page - Document Version 2.2 - {new Date().getFullYear()}
+          <CardFooter className="bg-muted/30 p-6 border-t flex flex-col items-center gap-2">
+            <p className="text-center text-sm font-bold text-muted-foreground uppercase tracking-widest">
+              Verified Asset Registry - Document ID: SAT-2026-02-17
+            </p>
+            <p className="text-xs text-muted-foreground/50">
+              © {new Date().getFullYear()} Liquidation Services. All Rights Reserved.
             </p>
           </CardFooter>
         </Card>
       ) : (
-        /* Empty State (Maintenance/Hidden) */
-        <div className="text-center space-y-4 animate-in fade-in zoom-in duration-500">
-          <div className="bg-primary/10 p-8 rounded-full inline-block">
-            <Loader2 className="text-primary w-16 h-16 animate-spin" />
+        /* Empty State */
+        <div className="text-center space-y-6 animate-in fade-in zoom-in duration-700">
+          <div className="bg-white p-12 rounded-full shadow-2xl inline-block border-4 border-accent">
+            <Loader2 className="text-accent w-24 h-24 animate-spin" />
           </div>
-          <h2 className="text-3xl font-bold">System Status: Updating</h2>
-          <p className="text-muted-foreground text-lg">The project visibility settings are being modified by the administrator.</p>
+          <h2 className="text-4xl font-black uppercase tracking-tighter">System Synchronizing</h2>
+          <p className="text-muted-foreground text-xl font-medium">Registry records are being updated by the administrator...</p>
         </div>
       )}
     </main>
