@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useDoc, useFirestore, errorEmitter, FirestorePermissionError } from '@/firebase';
+import { useDoc, useFirestore } from '@/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -42,7 +42,7 @@ export default function AdminPage() {
       setShowOnSale(settings.showOnSale ?? false);
       setTextEn(settings.closureNoticeTextEn || "This Project is on Sale. Kindly Contact saatphere25@gmail.com, at just ₹108000. Complete Source Code available");
       setTextHi(settings.closureNoticeTextHi || "Yeh project sale k liye available hai. Contact kare saatphere25@gmail.com. kbl ₹108000 mein. Complete Source Code available");
-      setSaleInfo(settings.saleInfoText || '');
+      setSaleInfo(settings.saleInfoText || "The complete 'Saat Phere' project (Source Code, Domain, Branding) is available for immediate acquisition. Serious buyers only.");
       hasInitialized.current = true;
     }
   }, [settings, saving]);

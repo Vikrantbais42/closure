@@ -30,7 +30,7 @@ export default function Home() {
   const showClosure = settings?.showClosureNotice ?? true;
   const showOnSale = settings?.showOnSale ?? false;
 
-  // Dynamic Content with fallback defaults
+  // Dynamic Content with specific defaults requested by user
   const textEn = settings?.closureNoticeTextEn || "This Project is on Sale. Kindly Contact saatphere25@gmail.com, at just ₹108000. Complete Source Code available";
   const textHi = settings?.closureNoticeTextHi || "Yeh project sale k liye available hai. Contact kare saatphere25@gmail.com. kbl ₹108000 mein. Complete Source Code available";
   const saleInfo = settings?.saleInfoText || "The complete 'Saat Phere' project (Source Code, Domain, Branding) is available for immediate acquisition. Serious buyers only.";
@@ -155,7 +155,7 @@ export default function Home() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div className="space-y-4 p-6 bg-muted/20 rounded-2xl border border-dashed">
                   <h3 className={cn("text-lg font-black uppercase tracking-widest flex items-center gap-2", showOnSale ? "text-accent" : "text-primary")}>
-                    Owner of this domain and website Record
+                    The Owner of this domain and website
                   </h3>
                   <div className="text-foreground/70 space-y-2 text-lg">
                     <p><span className="font-bold text-foreground">Subject:</span> Vijay Nagar Chauraha, Etawah</p>
@@ -169,7 +169,7 @@ export default function Home() {
                   </h3>
                   <div className="flex flex-col gap-3">
                     <Badge variant="destructive" className="w-fit text-md py-1 px-4">OFFLINE PERMANENTLY</Badge>
-                    {showOnSale && <Badge variant="secondary" className="w-fit bg-accent text-accent-foreground text-md py-1 px-4">AVAILABLE FOR BID</Badge>}
+                    {showOnSale && <Badge variant="secondary" className="w-fit bg-accent text-accent-foreground text-md py-1 px-4">AVAILABLE FOR SALE</Badge>}
                   </div>
                 </div>
               </div>
