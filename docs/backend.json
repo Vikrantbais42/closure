@@ -21,6 +21,10 @@
         "closureNoticeTextHi": {
           "type": "string",
           "description": "The Hinglish text for the closure notice."
+        },
+        "saleInfoText": {
+          "type": "string",
+          "description": "The text describing the acquisition details for the sale."
         }
       },
       "required": [

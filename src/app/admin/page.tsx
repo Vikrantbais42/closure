@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -80,10 +81,10 @@ export default function AdminPage() {
     };
 
     try {
-      // Use a timeout to prevent infinite "Saving" state if network hangs
+      // Use a longer timeout for Firestore sync
       const savePromise = setDoc(settingsRef, updates, { merge: true });
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Request timed out. Please check your connection.')), 10000)
+        setTimeout(() => reject(new Error('Save operation timed out. Please check your Firebase project settings and Security Rules.')), 15000)
       );
 
       await Promise.race([savePromise, timeoutPromise]);
