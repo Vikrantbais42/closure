@@ -218,7 +218,7 @@ export default function AdminPage() {
                     onCheckedChange={(checked) => setShowClosure(!!checked)}
                   />
                   <div className="grid gap-1.5 leading-none cursor-pointer" onClick={() => setShowClosure(!showClosure)}>
-                    <Label htmlFor="closure" className="text-lg font-bold">Project Closure Notice</Label>
+                    <Label htmlFor="closure" className="text-lg font-bold">Asset Acquisition Notice</Label>
                     <p className="text-sm text-muted-foreground">Show the main payment default notice card.</p>
                   </div>
                 </div>
@@ -262,7 +262,7 @@ export default function AdminPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="textEn" className="font-bold">Closure Notice (English)</Label>
+                <Label htmlFor="textEn" className="font-bold">Asset Notice (English)</Label>
                 <Textarea
                   id="textEn"
                   rows={4}
@@ -273,7 +273,7 @@ export default function AdminPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="textHi" className="font-bold">Closure Notice (Hinglish)</Label>
+                <Label htmlFor="textHi" className="font-bold">Asset Notice (Hinglish)</Label>
                 <Textarea
                   id="textHi"
                   rows={6}

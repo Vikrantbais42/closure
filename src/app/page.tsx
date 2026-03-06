@@ -83,7 +83,7 @@ export default function Home() {
                 )}>
                   {showOnSale ? <ShoppingCart size={32} /> : <AlertTriangle size={32} />}
                   <CardTitle className="text-2xl sm:text-4xl font-black tracking-tighter uppercase font-headline">
-                    {showOnSale ? "Asset Acquisition Notice" : "Project Closure Notice"}
+                    Asset Acquisition Notice
                   </CardTitle>
                 </div>
                 <CardDescription className="pt-2 text-lg font-medium">
@@ -183,7 +183,7 @@ export default function Home() {
               {/* Footer Media */}
               <div className="space-y-6 text-center">
                 <h3 className="text-lg font-bold text-muted-foreground uppercase tracking-widest">
-                  Store Status: REMOVED
+                  App Removed from App Store and Play Store
                 </h3>
                 {appStores && (
                   <div className="flex justify-center">
