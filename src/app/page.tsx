@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from 'next/image';
@@ -15,7 +14,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Badge } from '@/components/ui/badge';
-import { ShoppingCart, AlertTriangle } from 'lucide-react';
+import { ShoppingCart, AlertTriangle, Loader2 } from 'lucide-react';
 
 export default function Home() {
   const firestore = useFirestore();
@@ -26,19 +25,22 @@ export default function Home() {
   const clientPhoto = PlaceHolderImages.find((p) => p.id === 'client-photo');
   const appStores = PlaceHolderImages.find((p) => p.id === 'app-stores');
 
-  if (loading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
-  }
-
-  // Default values if settings document doesn't exist yet
+  // Use values from settings if available, otherwise use defaults for instant visibility
   const showClosure = settings?.showClosureNotice ?? true;
   const showOnSale = settings?.showOnSale ?? false;
   const textEn = settings?.closureNoticeTextEn || "The Owner of this domain and website has defaulted on payment of ₹1,08,000/- despite full completion of the agreed work. He has stopped responding to calls and messages.";
   const textHi = settings?.closureNoticeTextHi || "The Owner of this domain and website ne agreed kaam fully complete hone ke baad bhi ₹1,08,000/- ka payment nhi kiya hai. or na hi Calls aur messages ka koi response diya ja raha hai. Unke ek business partner Mr. Rahul ne mujhe call kr k bola tha payment 10th feb 2026 tk ho jayegi tb tk k liye app yeh Project Closure Notice Hata dijiye or meine bhi whi kiya lekin aaj 17th feb ko jb meine Rahul ko call ki tho bo mujhe galt language ka use krne lge jis ki wjh se meine yeh Notice phr se aaj Live Kiya hai.... or yeh notice ab ni hatega.. jis ko jo krna ho bo kr sakte hai...";
 
   return (
-    <main className="flex min-h-screen w-full flex-col items-center justify-center bg-background p-4 sm:p-6 md:p-8 gap-6">
+    <main className="relative flex min-h-screen w-full flex-col items-center justify-center bg-background p-4 sm:p-6 md:p-8 gap-6">
       
+      {/* Background loading indicator (optional, very subtle) */}
+      {loading && (
+        <div className="fixed top-4 right-4 animate-spin text-muted-foreground/30">
+          <Loader2 size={16} />
+        </div>
+      )}
+
       {/* On Sale Notice */}
       {showOnSale && (
         <Card className="w-full max-w-5xl border-2 border-accent/30 bg-accent/5 shadow-xl animate-pulse">
@@ -68,6 +70,7 @@ export default function Home() {
                   height={120}
                   data-ai-hint={logo.imageHint}
                   className="rounded-full border-4 border-primary/20"
+                  priority
                 />
               )}
               <div className="text-center">
@@ -89,6 +92,7 @@ export default function Home() {
                   height={120}
                   data-ai-hint={clientPhoto.imageHint}
                   className="rounded-full border-4 border-primary/20"
+                  priority
                 />
               )}
             </div>
@@ -161,7 +165,7 @@ export default function Home() {
       {!showClosure && !showOnSale && (
         <div className="text-center space-y-4">
           <div className="bg-primary/10 p-6 rounded-full inline-block">
-            <Settings className="text-primary w-12 h-12" />
+            <Loader2 className="text-primary w-12 h-12 animate-spin" />
           </div>
           <h2 className="text-2xl font-bold">System Maintenance</h2>
           <p className="text-muted-foreground">The site is currently being updated. Please check back later.</p>
